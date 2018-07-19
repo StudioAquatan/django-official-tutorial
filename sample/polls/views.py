@@ -1,7 +1,8 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
 
-from .models import Question
+from .models import Question, Choice
 
 
 def index(request):
@@ -41,8 +42,8 @@ def results(request, question_id):
     :param request: ユーザからのリクエストオブジェクト
     :param question_id: 指定された質問のid
     """
-    response = "You're looking at the results of question %s."
-    return HttpResponse(response % question_id)
+    question = get_object_or_404(Question, pk=question_id)
+    return render(request, 'polls/results.html', {'question': question})
 
 
 def vote(request, question_id):
@@ -51,4 +52,21 @@ def vote(request, question_id):
     :param request: ユーザからのリクエストオブジェクト
     :param question_id: 指定された質問のid
     """
-    return HttpResponse("You're voting on question %s." % question_id)
+    question = get_object_or_404(Question, pk=question_id)
+    try:
+        # request.POSTはPythonでいう辞書のようなオブジェクト
+        # 'choice'フィールドがPOSTされなかった場合，KeyErrorが送出される
+        selected_choice = question.choice_set.get(pk=request.POST['choice'])
+    except (KeyError, Choice.DoesNotExist):
+        # 何も選択しなかった場合，投票した質問の詳細ページを表示する
+        return render(request, 'polls/detail.html', {
+            'question': question,
+            'error_message': "You didn't select a choice.",
+        })
+    else:
+        # その選択肢へ投票し，セーブする（DBへ反映する）．
+        selected_choice.votes += 1
+        selected_choice.save()
+        # POSTに成功したらリダイレクトを返すのはWebアプリのお作法．今回の場合は結果ページへリダイレクトする．
+        # reverseはURLの逆引きをする関数，'polls:results'に質問のidを渡したURLを取得することでurls.pyと実装を分離できる．
+        return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
