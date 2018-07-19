@@ -6,7 +6,9 @@
         {# その後にURLパス上の変数を与える．この場合は質問のid． #}
         {# 例えばURLを'polls/<int:question_id>/'から'polls/hoge/<int:question_id>/'にしたくなっても #}
         {# urls.pyのみを変更すれば，自動的にこちらのURLも修正される． #}
-        <li><a href="{% url 'detail' question.id %}">{{ question.question_text }}</a></li>
+        {# アプリの名前空間（urls.pyのapp_name変数）を使ってURLを指定する #}
+        {# 複数のアプリが共存する場合に，このようにアプリの名前空間で分けることでテンプレート名が競合せずに済む． #}
+        <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
     {% endfor %}
     </ul>
 {% else %}
