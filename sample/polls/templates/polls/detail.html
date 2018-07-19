@@ -1,1 +1,8 @@
-{{ question }}
+<h1>{{ question.question_text }}</h1>
+<ul>
+{# 質問に含まれる全ての選択肢を表示する #}
+{% for choice in question.choice_set.all %}
+    {# forで一つ一つの選択肢にアクセス #}
+    <li>{{ choice.choice_text }}</li>
+{% endfor %}
+</ul>
