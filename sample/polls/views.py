@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.template import loader
+from django.shortcuts import render
 
 from .models import Question
 
@@ -12,14 +12,13 @@ def index(request):
     """
 
     latest_question_list = Question.objects.order_by('-pub_date')[:5]
-    # 'polls/templates'以下にある'polls/index.html'を取得
-    # 'templates'以下に直接ファイルを置くと，Djangoの他のアプリケーションが使用するtemplateと競合する可能性がある．
-    template = loader.get_template('polls/index.html')
     # 'latest_question_list'という名前で質問一覧をテンプレートエンジンに渡す
     context = {
         'latest_question_list': latest_question_list,
     }
-    return HttpResponse(template.render(context, request))
+    # loaderとHttpResponseを使わなくてもrenderというショートカットを利用できる
+    # 第一引数にリクエストオブジェクト，第二引数が使用するテンプレート，第三引数がテンプレートエンジンに渡す変数
+    return render(request, 'polls/index.html', context)
 
 
 def detail(request, question_id):
