@@ -56,8 +56,10 @@ ROOT_URLCONF = 'sample.urls'
 
 TEMPLATES = [
     {
+        # Djangoテンプレートエンジンを使用
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
+        # 各アプリケーション直下の'templates'ディレクトリを使用するフラグ
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

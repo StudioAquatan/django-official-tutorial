@@ -1,0 +1,11 @@
+{% if latest_question_list %}
+    <ul>
+    {% for question in latest_question_list %}
+        {# URLを書いて質問へのリンクを作る #}
+        <li><a href="/polls/{{ question.id }}/">{{ question.question_text }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    {# 質問が一つも登録されていなかった場合 #}
+    <p>No polls are available.</p>
+{% endif %}

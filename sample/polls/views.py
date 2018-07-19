@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.template import loader
 
 from .models import Question
 
@@ -9,12 +10,16 @@ def index(request):
     :param request: ユーザからのリクエストオブジェクト
     :return:
     """
-    # order_by()でソートできる．ここではpub_dateカラムについて降順にソートし，上から5つ取得している．
-    # 降順にするにはカラム名の先頭に'-'をつける
+
     latest_question_list = Question.objects.order_by('-pub_date')[:5]
-    # 得られた質問オブジェクトの質問文を','区切りで出力
-    output = ', '.join([q.question_text for q in latest_question_list])
-    return HttpResponse(output)
+    # 'polls/templates'以下にある'polls/index.html'を取得
+    # 'templates'以下に直接ファイルを置くと，Djangoの他のアプリケーションが使用するtemplateと競合する可能性がある．
+    template = loader.get_template('polls/index.html')
+    # 'latest_question_list'という名前で質問一覧をテンプレートエンジンに渡す
+    context = {
+        'latest_question_list': latest_question_list,
+    }
+    return HttpResponse(template.render(context, request))
 
 
 def detail(request, question_id):
