@@ -1,49 +1,48 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
+from django.views import generic
 
 from .models import Question, Choice
 
 
-def index(request):
+# クラスベースビューの詳細は https://docs.djangoproject.com/ja/2.0/topics/class-based-views/
+# ListViewは要素をリスト表示するための汎用View
+class IndexView(generic.ListView):
     """
-    最新の5つの質問を表示するView
-    :param request: ユーザからのリクエストオブジェクト
-    :return:
+    最新の質問5つを表示するView．
     """
+    # 使用するテンプレートを指定
+    template_name = 'polls/index.html'
+    # テンプレートで使用する変数名の指定
+    context_object_name = 'latest_question_list'
 
-    latest_question_list = Question.objects.order_by('-pub_date')[:5]
-    # 'latest_question_list'という名前で質問一覧をテンプレートエンジンに渡す
-    context = {
-        'latest_question_list': latest_question_list,
-    }
-    # loaderとHttpResponseを使わなくてもrenderというショートカットを利用できる
-    # 第一引数にリクエストオブジェクト，第二引数が使用するテンプレート，第三引数がテンプレートエンジンに渡す変数
-    return render(request, 'polls/index.html', context)
+    def get_queryset(self):
+        """
+        クエリセットを取得する関数をオーバーライドし，最新の質問5つを返す．
+        """
+        return Question.objects.order_by('-pub_date')[:5]
 
 
-def detail(request, question_id):
+# DetailViewは指定したモデルの要素一つを取得し表示する汎用View
+class DetailView(generic.DetailView):
     """
     質問の詳細ページのView
-    :param request: ユーザからのリクエストオブジェクト
-    :param question_id: 指定された質問のid
     """
-    # get_object_or_404の第一引数は取得するモデル，そこからカラム名と値で絞り込む．
-    # Questionオブジェクトのidがquestion_idのものを探索．存在しない場合404を返す．
-    # このショートカットを使うメリットはView側でエラーハンドリングしてメッセージを返す必要がなくなり，
-    # Modelのmanagerのget()メソッドにおいてのエラーハンドリングのみで済むため，ViewとModelが分離できること
-    question = get_object_or_404(Question, pk=question_id)
-    return render(request, 'polls/detail.html', {'question': question})
+    # 詳細を表示するモデルを指定
+    model = Question
+    # 使用するテンプレートを指定
+    template_name = 'polls/detail.html'
 
 
-def results(request, question_id):
+class ResultsView(generic.DetailView):
     """
     質問の結果ページのView
-    :param request: ユーザからのリクエストオブジェクト
-    :param question_id: 指定された質問のid
     """
-    question = get_object_or_404(Question, pk=question_id)
-    return render(request, 'polls/results.html', {'question': question})
+    # 詳細を表示するモデルを指定
+    model = Question
+    # 使用するテンプレートを指定
+    template_name = 'polls/results.html'
 
 
 def vote(request, question_id):
