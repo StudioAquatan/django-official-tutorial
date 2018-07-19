@@ -1,5 +1,5 @@
-from django.http import HttpResponse, Http404
-from django.shortcuts import render
+from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404
 
 from .models import Question
 
@@ -27,14 +27,11 @@ def detail(request, question_id):
     :param request: ユーザからのリクエストオブジェクト
     :param question_id: 指定された質問のid
     """
-    # これまでは存在しないidのものにアクセスしても表示できた．本来は404 Not Foundを返したい．
-    try:
-        # 指定された質問を取得
-        question = Question.objects.get(pk=question_id)
-    except Question.DoesNotExist:
-        # 存在しなかった場合に送出されるエラーを補足．404エラーを返す．
-        raise Http404("Question does not exist")
-    # 正常に取得できた場合，その質問をrenderに渡して表示する
+    # get_object_or_404の第一引数は取得するモデル，そこからカラム名と値で絞り込む．
+    # Questionオブジェクトのidがquestion_idのものを探索．存在しない場合404を返す．
+    # このショートカットを使うメリットはView側でエラーハンドリングしてメッセージを返す必要がなくなり，
+    # Modelのmanagerのget()メソッドにおいてのエラーハンドリングのみで済むため，ViewとModelが分離できること
+    question = get_object_or_404(Question, pk=question_id)
     return render(request, 'polls/detail.html', {'question': question})
 
 
