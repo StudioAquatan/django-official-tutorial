@@ -10,6 +10,10 @@ class Question(models.Model):
     # 引数を与えるとAdminで表示時のカラム名として使われる
     pub_date = models.DateTimeField('date published')  # 作成された日付のカラム
 
+    def __str__(self):
+        """表示名を質問文に"""
+        return self.question_text
+
 
 class Choice(models.Model):
     """
@@ -20,3 +24,7 @@ class Choice(models.Model):
     choice_text = models.CharField(max_length=200)  # 選択肢の文章
     # 初期値をdefaultで与えることが出来る
     votes = models.IntegerField(default=0)  # 投票数のカラム
+
+    def __str__(self):
+        """表示名を選択肢の文章に"""
+        return self.choice_text
