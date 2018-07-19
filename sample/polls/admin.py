@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from polls.models import Question
+
+# QuestionとChoiceをadminサイトから触れるように登録
+admin.site.register(Question)
