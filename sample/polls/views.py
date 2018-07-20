@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
+from django.utils import timezone
 from django.views import generic
 
 from .models import Question, Choice
@@ -21,7 +22,8 @@ class IndexView(generic.ListView):
         """
         クエリセットを取得する関数をオーバーライドし，最新の質問5つを返す．
         """
-        return Question.objects.order_by('-pub_date')[:5]
+        # 未来の日付の質問は表示されないように修正
+        return Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
 
 
 # DetailViewは指定したモデルの要素一つを取得し表示する汎用View
