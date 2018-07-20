@@ -23,6 +23,8 @@ class QuestionAdmin(admin.ModelAdmin):
     ]
     # 表示項目を設定
     inlines = [ChoiceInline]
+    # フィルタリングする項目
+    list_filter = ['pub_date']
 
 
 # Questionをadminサイトから触れるように登録
