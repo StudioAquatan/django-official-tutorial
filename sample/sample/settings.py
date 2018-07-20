@@ -58,7 +58,9 @@ TEMPLATES = [
     {
         # Djangoテンプレートエンジンを使用
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates')
+        ],
         # 各アプリケーション直下の'templates'ディレクトリを使用するフラグ
         'APP_DIRS': True,
         'OPTIONS': {
