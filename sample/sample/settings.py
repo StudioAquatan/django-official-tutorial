@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 新しくpollsアプリを追加する
+    'polls',
 ]
 
 MIDDLEWARE = [
@@ -54,8 +56,12 @@ ROOT_URLCONF = 'sample.urls'
 
 TEMPLATES = [
     {
+        # Djangoテンプレートエンジンを使用
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates')
+        ],
+        # 各アプリケーション直下の'templates'ディレクトリを使用するフラグ
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -106,7 +112,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ja-jp'
 
-TIME_ZONE = 'UTC'
+# 変え忘れてた
+TIME_ZONE = 'Asia/Tokyo'
 
 USE_I18N = True
 

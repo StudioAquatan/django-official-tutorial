@@ -1,0 +1,27 @@
+{# base.htmlを継承 #}
+{% extends 'base.html' %}
+
+{# タイトルを変更 #}
+{% block title %}質問詳細ページ{% endblock %}
+
+{# メインコンテンツ #}
+{% block content %}
+    <h1>{{ question.question_text }}</h1>
+
+    {# エラーがある場合表示 #}
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+    {# 投票ページに対してPOSTするフォーム #}
+    <form action="{% url 'polls:vote' question.id %}" method="post">
+    {# クロスサイトリクエストフォージェリを回避するためのトークン．Djangoの機能により自動生成・検証される． #}
+    {# クロスサイトリクエストフォージェリとは https://www.ipa.go.jp/security/vuln/vuln_contents/csrf.html #}
+    {% csrf_token %}
+    {% for choice in question.choice_set.all %}
+        {# 特殊な変数forloopはそのループ中のカウントを取得する． #}
+        {# 詳しくは https://docs.djangoproject.com/en/2.0/ref/templates/builtins/#for #}
+        <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
+        <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br />
+    {% endfor %}
+    <input type="submit" value="Vote" />
+    </form>
+{% endblock %}

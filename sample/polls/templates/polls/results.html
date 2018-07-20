@@ -1,0 +1,20 @@
+{# base.htmlを継承 #}
+{% extends 'base.html' %}
+
+{# タイトルを変更 #}
+{% block title %}結果ページ{% endblock %}
+
+{# メインコンテンツ #}
+{% block content %}
+    <h1>{{ question.question_text }}</h1>
+
+    <ul>
+    {% for choice in question.choice_set.all %}
+        {# pluralizeフィルタは与えられた値が1より大きかった場合に複数形のsuffixを出力する #}
+        {# デフォルトでは's'を出力するので，この場合投票数が1を超えると<li>選択肢 -- 2 votes</li>という出力を得る #}
+        <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
+    {% endfor %}
+    </ul>
+
+    <a href="{% url 'polls:detail' question.id %}">Vote again?</a>
+{% endblock %}
