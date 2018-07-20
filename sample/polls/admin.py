@@ -5,8 +5,13 @@ from polls.models import Question
 
 class QuestionAdmin(admin.ModelAdmin):
     """質問のAdminサイトでの表示をカスタマイズするクラス"""
-    # 表示するフィールドの順番を変更
-    fields = ['pub_date', 'question_text']
+    # 表示するフィールドをセクションごとに分ける
+    fieldsets = [
+        # セクション名無し
+        (None, {'fields': ['question_text']}),
+        # セクション名有り
+        ('Date information', {'fields': ['pub_date']})
+    ]
 
 
 # QuestionとChoiceをadminサイトから触れるように登録
