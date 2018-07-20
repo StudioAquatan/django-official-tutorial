@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from polls.models import Question
+from polls.models import Question, Choice
 
 
 class QuestionAdmin(admin.ModelAdmin):
@@ -14,5 +14,9 @@ class QuestionAdmin(admin.ModelAdmin):
     ]
 
 
-# QuestionとChoiceをadminサイトから触れるように登録
+# Questionをadminサイトから触れるように登録
 admin.site.register(Question, QuestionAdmin)
+
+# Choiceも登録する
+# これでChoice側からQuestionとのリレーションを変更できる
+admin.site.register(Choice)
