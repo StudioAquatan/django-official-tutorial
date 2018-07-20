@@ -19,7 +19,10 @@ class Question(models.Model):
         """
         # timezone.now() -> 指定されたタイムゾーンでの現在時間を返す
         # datetime.timedelta(days=1) -> 1日分の時間を示す．これを引くことで1日前の時間を取得する．
-        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
+        # 1日前から現在までの場合のみTrueを返す
+        now = timezone.now()
+        yday = now - datetime.timedelta(days=1)
+        return yday <= self.pub_date <= now
 
     def __str__(self):
         """表示名を質問文に"""
