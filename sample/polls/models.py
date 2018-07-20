@@ -1,4 +1,6 @@
+import datetime
 from django.db import models
+from django.utils import timezone
 
 
 class Question(models.Model):
@@ -9,6 +11,15 @@ class Question(models.Model):
     question_text = models.CharField(max_length=200)  # 質問文のカラム
     # 引数を与えるとAdminで表示時のカラム名として使われる
     pub_date = models.DateTimeField('date published')  # 作成された日付のカラム
+
+    def was_published_recently(self) -> bool:
+        """
+        昨日より後に作成されたかどうかを判定するメソッド
+        :return:
+        """
+        # timezone.now() -> 指定されたタイムゾーンでの現在時間を返す
+        # datetime.timedelta(days=1) -> 1日分の時間を示す．これを引くことで1日前の時間を取得する．
+        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
 
     def __str__(self):
         """表示名を質問文に"""
