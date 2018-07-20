@@ -12,6 +12,8 @@ class ChoiceInline(admin.TabularInline):
 
 class QuestionAdmin(admin.ModelAdmin):
     """質問のAdminサイトでの表示をカスタマイズするクラス"""
+    # adminの一覧ページで表示する項目
+    list_display = ('question_text', 'pub_date', 'was_published_recently')
     # 表示するフィールドをセクションごとに分ける
     fieldsets = [
         # セクション名無し

@@ -24,6 +24,13 @@ class Question(models.Model):
         yday = now - datetime.timedelta(days=1)
         return yday <= self.pub_date <= now
 
+    # 並び替える際に使用するフィールド
+    was_published_recently.admin_order_field = 'pub_date'
+    # 表示形式をBooleanにする
+    was_published_recently.boolean = True
+    # 表示名を変更
+    was_published_recently.short_description = 'Published recently?'
+
     def __str__(self):
         """表示名を質問文に"""
         return self.question_text
