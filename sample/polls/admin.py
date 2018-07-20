@@ -3,6 +3,13 @@ from django.contrib import admin
 from polls.models import Question, Choice
 
 
+class ChoiceInline(admin.StackedInline):
+    """Question側からもChoiceを触れるようにする"""
+    model = Choice
+    # 表示数として最低3こぶん以上用意する
+    extra = 3
+
+
 class QuestionAdmin(admin.ModelAdmin):
     """質問のAdminサイトでの表示をカスタマイズするクラス"""
     # 表示するフィールドをセクションごとに分ける
@@ -12,11 +19,9 @@ class QuestionAdmin(admin.ModelAdmin):
         # セクション名有り
         ('Date information', {'fields': ['pub_date']})
     ]
+    # 表示項目を設定
+    inlines = [ChoiceInline]
 
 
 # Questionをadminサイトから触れるように登録
 admin.site.register(Question, QuestionAdmin)
-
-# Choiceも登録する
-# これでChoice側からQuestionとのリレーションを変更できる
-admin.site.register(Choice)
