@@ -3,7 +3,7 @@ from django.contrib import admin
 from polls.models import Question, Choice
 
 
-class ChoiceInline(admin.StackedInline):
+class ChoiceInline(admin.TabularInline):
     """Question側からもChoiceを触れるようにする"""
     model = Choice
     # 表示数として最低3こぶん以上用意する
