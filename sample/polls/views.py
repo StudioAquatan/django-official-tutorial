@@ -36,6 +36,12 @@ class DetailView(generic.DetailView):
     # 使用するテンプレートを指定
     template_name = 'polls/detail.html'
 
+    def get_queryset(self):
+        """
+        未来の日付のものは含まないようにフィルタする
+        """
+        return Question.objects.filter(pub_date__lte=timezone.now())
+
 
 class ResultsView(generic.DetailView):
     """
