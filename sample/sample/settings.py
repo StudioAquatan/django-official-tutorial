@@ -12,22 +12,34 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 import dotenv
+from pathlib import Path
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# envファイル名を設定
+envfile = os.getenv('ENV_FILE', '.env')
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
+# .envファイルの場所は`webapp_practice/sample/.env`
+dotenv_file = Path(BASE_DIR) / envfile
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'ven_m0-!p5x8*rnu4&z^g5nyf2lw-b7g+%pwqf60u2f0&1+d47'
+# .envが存在する場合は読み込む
+if dotenv_file.exists():
+    dotenv.load_dotenv(dotenv_file.as_posix())
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# 環境変数から読み込む
+SECRET_KEY = os.getenv('SECRET_KEY')
+
+# Djangoのデバッグ機能の有効/無効．デプロイ時にはFalseにしないといけない．
+# 'true'や'True'などを与えるとTrueが返る．それ以外ではFalseが返る．
+DEBUG = (os.getenv('DEBUG', 'False').lower() == 'true')
 
 ALLOWED_HOSTS = []
 
+# このWebアプリにアクセス可能なドメイン名を指定する．'*'で全て．
+# 複数指定が可能なので','で区切って記述することで順にリストに追加していく
+for host in os.getenv('ALLOWED_HOSTS', '*').split(','):
+    ALLOWED_HOSTS.append(host.strip())
 
 # Application definition
 
@@ -83,7 +95,8 @@ WSGI_APPLICATION = 'sample.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # データをDockerホストにマウントしやすいよう別ディレクトリに退避
+        'NAME': os.path.join(BASE_DIR, 'data', 'db.sqlite3'),
     }
 }
 
@@ -126,3 +139,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# 静的ファイルの格納場所を指定
+# manage.py collectstaticコマンドでこのディレクトリ内に静的ファイルが全てコピーされる
+STATIC_ROOT = 'static'
