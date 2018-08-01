@@ -11,7 +11,7 @@ services:
       - sample_static_data:/var/www/static
       - ./conf:/etc/nginx/conf.d
     env_file:
-      - sample/.env
+      - ./env_files/.env
     logging:
       options:
         max-size: "10m"
