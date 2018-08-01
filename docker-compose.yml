@@ -1,0 +1,48 @@
+version: "3.2"
+
+services:
+  static:
+    image: nginx:stable
+    container_name: django_sample_static
+    expose:
+      - 80
+      - 443
+    volumes:
+      - sample_static_data:/var/www/static
+      - ./conf:/etc/nginx/conf.d
+    env_file:
+      - sample/.env
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
+    networks:
+      shared:
+        aliases:
+          - django_sample_static
+
+  app:
+    image: studioaquatan/django_official_tutorial:latest
+    container_name: django_sample_app
+    expose:
+      - 8000
+    volumes:
+      - sample_static_data:/opt/sample/static
+      - sample_app_data:/opt/sample/data
+    env_file:
+      - sample/.env
+    restart: always
+    networks:
+      shared:
+        aliases:
+          - django_sample_app
+
+networks:
+  shared:
+    external:
+      name: shared
+
+volumes:
+  sample_static_data:
+  sample_app_data:
