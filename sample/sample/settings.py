@@ -139,3 +139,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# 静的ファイルの格納場所を指定
+# manage.py collectstaticコマンドでこのディレクトリ内に静的ファイルが全てコピーされる
+STATIC_ROOT = 'static'
